@@ -1,0 +1,29 @@
+package exercicio_LanchoneteQuaseTresLanches;
+
+import java.time.LocalDate;
+
+public class Salgadinho extends Prato {
+    private String tipo;
+    private String massa;
+    private String recheio;
+
+    public Salgadinho(double peso, double precoVenda, LocalDate dataValidade, String tipo, String massa,
+            String recheio) {
+        super(peso, precoVenda, dataValidade);
+        this.tipo = tipo;
+        this.massa = massa;
+        this.recheio = recheio;
+
+    }
+
+    @Override
+    public void calcularPreco() {
+        // O preço de venda já é o valor total.
+        // Segundo os requisitos não há acréscimos.
+    }
+
+    @Override
+    public String toString() {
+        return "Salgadinho: " + "Recheio de " + recheio + " (" + tipo + " com massa " + massa + ") - R$ " + getPrecoVenda();
+    }
+}
