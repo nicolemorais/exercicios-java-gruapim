@@ -17,6 +17,6 @@ public abstract class Prato {
     public double getPrecoVenda() {return precoVenda;}
     public LocalDate getDataValidade() {return dataValidade;}
 
-    public abstract void calcularPreco();
+    public abstract Double calcularPreco();
 
 }

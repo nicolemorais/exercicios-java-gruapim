@@ -17,9 +17,9 @@ public class Salgadinho extends Prato {
     }
 
     @Override
-    public void calcularPreco() {
-        // O preço de venda já é o valor total.
-        // Segundo os requisitos não há acréscimos.
+    public Double calcularPreco() {
+        
+        return getPrecoVenda();
     }
 
     @Override
