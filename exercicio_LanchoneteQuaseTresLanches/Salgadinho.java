@@ -24,6 +24,6 @@ public class Salgadinho extends Prato {
 
     @Override
     public String toString() {
-        return "Salgadinho: " + "Recheio de " + recheio + " (" + tipo + " com massa " + massa + ") - R$ " + getPrecoVenda();
+        return "Salgadinho: " + "Recheio de " + recheio + " (" + tipo + " com massa " + massa + " - Validade: " + getDataValidade() + ")" + " - R$ " + getPrecoVenda();
     }
 }

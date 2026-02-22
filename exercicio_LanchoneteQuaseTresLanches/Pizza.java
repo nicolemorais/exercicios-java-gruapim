@@ -22,6 +22,6 @@ public class Pizza extends Prato {
 
     @Override
     public String toString() {
-        return "Pizza: " + "Recheio de " + recheio + " (Borda: " + borda + ") - R$ " + getPrecoVenda();
+        return "Pizza: " + "Recheio de " + recheio + " (Borda: " + borda + " - Validade: " + getDataValidade() + ")" + " - R$ " + getPrecoVenda();
     }
 }

@@ -10,9 +10,9 @@ public class SistemaLanchonete {
         // 3 dias de validade a partir da data de criação
         LocalDate dataValidade = LocalDate.now().plusDays(3);
 
-        Pizza p1 = new Pizza(.600, 35.00, dataValidade, "Tomate", "Frango com catupiry", "Catupiry");
-        Lanche l1 = new Lanche(0.400, 6.00, dataValidade, "francês", "Calabresa", "Katchup");
-        Salgadinho s1 = new Salgadinho(0.80, 2, dataValidade, "Assado", "Folhada", "Carne");
+        Pizza p1 = new Pizza(.800, 45.00, dataValidade, "Tomate", "Frango com catupiry", "Catupiry");
+        Lanche l1 = new Lanche(0.400, 12.00, dataValidade, "francês", "Calabresa", "Katchup");
+        Salgadinho s1 = new Salgadinho(0.80, 4.50, dataValidade, "Assado", "Folhada", "Carne");
 
         Pedido Pedido1 = new Pedido("Marina", 5.00);
 

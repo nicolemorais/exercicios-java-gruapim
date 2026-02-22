@@ -22,6 +22,6 @@ public class Lanche extends Prato {
 
     @Override
     public String toString() {
-        return "Lanche: " + "Recheio de " + recheio + " no Pão " + paoTipo + " com molho " + molho + " - R$ " + getPrecoVenda();
+        return "Lanche: " + "Recheio de " + recheio + " (Pão " + paoTipo + " com molho " + molho + " - Validade: " + getDataValidade() + ")" + " - R$ " + getPrecoVenda();
     }
 }
