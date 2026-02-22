@@ -1,18 +1,18 @@
 package exercicio_LanchoneteQuaseTresLanches;
+
 import java.time.LocalDate;
 import java.util.Scanner;
-
 
 public class SistemaLanchonete {
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
 
-        //3 dias de validade a partir da data de criação
+        // 3 dias de validade a partir da data de criação
         LocalDate dataValidade = LocalDate.now().plusDays(3);
 
-        Pizza p1 = new Pizza(.600, 35.00, dataValidade, "Tomate","Frango com catupiry", "Catupiry");
-        Lanche l1 = new Lanche( 0.400, 6.00, dataValidade, "francês", "Calabresa", "Katchup");
-        Salgadinho s1 = new Salgadinho(0.80, 2, dataValidade, "Assado","Folhada","Carne");
+        Pizza p1 = new Pizza(.600, 35.00, dataValidade, "Tomate", "Frango com catupiry", "Catupiry");
+        Lanche l1 = new Lanche(0.400, 6.00, dataValidade, "francês", "Calabresa", "Katchup");
+        Salgadinho s1 = new Salgadinho(0.80, 2, dataValidade, "Assado", "Folhada", "Carne");
 
         Pedido Pedido1 = new Pedido("Marina", 5.00);
 
@@ -24,18 +24,30 @@ public class SistemaLanchonete {
 
         System.out.println("------------------------");
         double totalDaConta = Pedido1.calcularTotal();
-        System.out.print("Valor recebido em dinheiro: R$ ");
-        double valorPago = reader.nextDouble();
+        double valorPago = 0;
 
+        while (valorPago < totalDaConta) {
+            double falta = totalDaConta - valorPago;
+            System.out.printf("Faltam R$ %.2f. Digite o valor entregue: R$ ", falta);
+
+            double valorFaltante = reader.nextDouble();
+
+            if (valorFaltante > 0) {
+                valorPago += valorFaltante;
+            } else {
+                System.out.println("Por favor, insira um valor positivo.");
+            }
+        }
         double troco = valorPago - totalDaConta;
 
-        if (troco < 0){
-            System.out.println("Erro: Faltam R$ " + Math.abs(troco));
-        }else{
-            System.out.printf("Retorne R$ %.2f de troco.\n", troco);
-        }
+        System.out.println("\n------------------------");
+        System.out.printf("Total pago: R$ %.2f\n", valorPago);
 
-        reader.close();
+        if (troco > 0) {
+            System.out.printf("Troco a devolver: R$ %.2f\n", troco);
+        }else{
+            System.out.println("Pagamento exato. Não há troco.");
+        }
 
     }
 }
