@@ -27,5 +27,3 @@ O fluxo de execução segue da seguinte forma.
 2. **Gestão do Pedido:** Um objeto da classe `Pedido` é criado, recebendo o nome do cliente e a taxa de serviço. Os itens são adicionados à lista interna do pedido atráves do método `getItensConsumidos().add()`.
 3. **Processamento da Nota Fiscal:** Ao chamar `mostrarFatura()`, o sistema percorre a lista de itens somando os preços e exibindo um resumo detalhado para o vendedor.
 4. **Cálculo de Troco:** O sistema solicita o valor pago em dinheiro. utilizando o método `calcularTotal()`, o sitema subtrai o valor da conta do valor recebido e exibe o troco exato ao vendedor.
-
-[def]: exercicio_LanchoneteQuaseTresLanches\Diagrama_de_Classes.png "Lanchonete Quase Três Lanches"
