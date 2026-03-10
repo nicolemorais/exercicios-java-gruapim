@@ -26,4 +26,37 @@ public class AcademiaDevPlatform {
         return supportQueue.poll();
     }
 
+    //add curso
+    public void addCourse(Course novoCurso) {
+        String titulo = novoCurso.getTitle();
+
+         if (courses.containsKey(titulo)) {
+            System.out.println("Erro: Já existe um curso cadastrado com o título '" + titulo + "'.");
+            return;
+        }
+
+        courses.put(titulo, novoCurso);
+        System.out.println("Sucesso: Curso '" + titulo + "' adicionado ao catálogo!");
+    }
+    // muda status do curso
+    public void changeCourseStatus(String title, CourseStatus newStatus) {
+        Course course = courses.get(title);
+        if (course != null) {
+            course.setStatus(newStatus);
+            System.out.println("Status do curso '" + title + "' alterado para " + newStatus);
+        } else {
+            System.out.println("Erro: Curso '" + title + "' não encontrado.");
+        }
+    }
+
+    // Consulta o catalogo apenas ativos
+    public void listActiveCourses() {
+        System.out.println("\n- Catálogo de Cursos Ativos -");
+
+
+        courses.values().stream()
+                .filter(Course::isActive)
+                .forEach(course -> System.out.println(course.toString()));
+    }
+
  }
