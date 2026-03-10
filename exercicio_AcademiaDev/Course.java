@@ -3,11 +3,22 @@ package exercicio_AcademiaDev;
 import java.util.Objects;
 
 public class Course {
+    @CsvColumn(label = "Título do Curso")
     private final String title;
+
+    @CsvColumn(label = "Descrição")
     private String description;
+
+    @CsvColumn(label = "Instrutor")
     private String instructorName;
+
+    @CsvColumn(label = "Carga Horária")
     private int durationInHours;
+
+    @CsvColumn(label = "Nível")
     private DifficultyLevel level;
+
+    @CsvColumn(label = "Status do Curso")
     private CourseStatus status;
 
     public Course(String title, String description, String instructorName, int durationInHours, DifficultyLevel level) {
@@ -41,6 +52,10 @@ public class Course {
 
     public CourseStatus getStatus() {
         return status;
+    }
+
+    public void setActive(boolean active) {
+        this.status = active ? CourseStatus.ACTIVE : CourseStatus.INACTIVE;
     }
 
     public boolean isActive() {

@@ -7,7 +7,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Student extends User {
-    private final SubscriptionPlan subscriptionPlan;
+    @CsvColumn(label = "Plano de Assinatura")
+    private SubscriptionPlan subscriptionPlan;
+
     private final List<Enrollment> enrollments;
 
     public Student(String name, String email, SubscriptionPlan subscriptionPlan) {
@@ -15,6 +17,14 @@ public class Student extends User {
         this.subscriptionPlan = Objects.requireNonNull(subscriptionPlan, "Plano de assinatura é obrigatório");
         this.enrollments = new ArrayList<>();
     }
+
+    public SubscriptionPlan getSubscriptionPlan() {
+        return subscriptionPlan;
+    }
+
+    public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
+    this.subscriptionPlan = subscriptionPlan;
+}
 
     public boolean canEnroll() {
         long inProgressCount = enrollments.stream()
