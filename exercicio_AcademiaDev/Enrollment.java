@@ -1,8 +1,6 @@
 package exercicio_AcademiaDev;
 
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
 
 public class Enrollment {
     private final Student student;
@@ -13,11 +11,11 @@ public class Enrollment {
     private LocalDate completionDate;
 
     public Enrollment(Student student, Course course) {
-        this.student = Objects.requireNonNull(student, "Estudante é obrigatório");
-        this.course = Objects.requireNonNull(course, "Curso é obrigatório");
+        this.student = student;
+        this.course = course;
         this.enrollmentDate = LocalDate.now();
-        this.status = EnrollmentStatus.IN_PROGRESS;
         this.progress = 0;
+        this.status = EnrollmentStatus.ACTIVE;
     }
 
     public Student getStudent() {
@@ -37,41 +35,30 @@ public class Enrollment {
     }
 
     public void updateProgress(int newProgress) {
-        if (newProgress < 0 || newProgress > 100)
-            throw new IllegalArgumentException("Progresso deve estar entre 0 e 100");
+        if (newProgress < this.progress) {
+            throw new IllegalArgumentException("O progresso não pode ser menor que o atual (" + this.progress + "%).");
+        }
 
-        this.progress = newProgress;
+        this.progress = Math.min(newProgress, 100);
 
-        Optional.of(this.progress)
-                .filter(p -> p == 100)
-                .ifPresent(p -> {
-                    this.status = EnrollmentStatus.COMPLETED;
-                    this.completionDate = LocalDate.now();
-                });
+        if (this.progress == 100 && this.status != EnrollmentStatus.COMPLETED) {
+            this.status = EnrollmentStatus.COMPLETED;
+            this.completionDate = LocalDate.now();
+        }
     }
 
-    public void cancel() {
-
-        Optional.of(this.status)
-                .filter(s -> s == EnrollmentStatus.IN_PROGRESS)
-                .ifPresentOrElse(
-                        s -> this.status = EnrollmentStatus.CANCELLED,
-                        () -> {
-                            throw new IllegalStateException("Status inválido para cancelamento: " + status);
-                        });
+    public void unsubscribe(){
+        if (this.status == EnrollmentStatus.COMPLETED){
+            throw new IllegalStateException("Não é possível cancelar um curso já concluído.");
+        }
+        this.status = EnrollmentStatus.CANCELLED;
     }
 
-    public boolean isInProgress() {
-        return this.status == EnrollmentStatus.IN_PROGRESS;
+    public boolean isActive() {
+        return this.status == EnrollmentStatus.ACTIVE;
     }
 
     public boolean isCompleted() {
         return this.status == EnrollmentStatus.COMPLETED;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("[%s] %s em %s - Progresso: %d%%",
-                status, student.getName(), course.getTitle(), progress);
     }
 }

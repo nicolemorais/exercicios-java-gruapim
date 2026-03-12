@@ -23,14 +23,6 @@ public class InitialData {
 
         List.of(allan, carolina).forEach(student -> {
             platform.registerUser(student);
-
-            // Exemplo de matrícula
-            platform.findCourseByTitle("Java Moderno")
-                    .ifPresent(course -> {
-                        Enrollment e = new Enrollment(student, course);
-                        student.addEnrollment(e);
-                        e.updateProgress(50);
-                    });
         });
 
         platform.openTicket(allan, "Dúvida Técnica", "Não entendi o conceito de Optional na aula 02.");

@@ -12,6 +12,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import exercicio_AcademiaDev.exceptions.EnrollmentException;
+
 public class AcademiaDevPlatform {
 
     private final Map<String, User> users = new HashMap<>();
@@ -34,23 +36,6 @@ public class AcademiaDevPlatform {
                 .ifPresent(c -> courses.put(c.getTitle().toLowerCase(), c));
     }
 
-    public void enrollStudent(Student student, String courseTitle) {
-        findCourseByTitle(courseTitle).ifPresentOrElse(course -> {
-            if (!course.isActive()) {
-                System.out.println("Erro: O curso selecionado não está ativo.");
-                return;
-            }
-
-            try {
-                Enrollment newEnrollment = new Enrollment(student, course);
-                student.addEnrollment(newEnrollment);
-                System.out.println("Sucesso: Matrícula em '" + course.getTitle() + "' realizada!");
-            } catch (IllegalStateException e) {
-                System.out.println("Erro de Plano: " + e.getMessage());
-            }
-        }, () -> System.out.println("Erro: Curso não encontrado."));
-    }
-
     // --- Operações de adminitrador ---
 
     public void changeStatus(String titulo) {
@@ -64,7 +49,7 @@ public class AcademiaDevPlatform {
 
     public void changePlan(String email, SubscriptionPlan novoPlano) {
         findUserByEmail(email)
-                .filter(Student.class::isInstance) // Garante que é um Student
+                .filter(Student.class::isInstance)
                 .map(Student.class::cast)
                 .ifPresentOrElse(
                         student -> {
@@ -99,6 +84,30 @@ public class AcademiaDevPlatform {
     }
 
     // Aluno
+
+        public void enrollStudent(String email, String courseTitle) {
+        Student student = findUserByEmail(email)
+            .filter(u -> u instanceof Student)
+            .map(u -> (Student) u)
+            .orElseThrow(() -> new EnrollmentException("Aluno não encontrado com o e-mail: " + email));
+
+        findCourseByTitle(courseTitle)
+        .map(course -> {
+            if (course.getStatus() != CourseStatus.ACTIVE){
+                throw new EnrollmentException("Matrícula negada: O curso '\" + course.getTitle() + \"' está inativo.");
+            }
+            if (!student.canEnroll()){
+                throw new EnrollmentException("Matrícula negada: Limite de vagas do plano " + student.getSubscriptionPlan() + " atingido.");
+            }
+            return new Enrollment(student, course);
+        })
+        .ifPresentOrElse(
+            student::addEnrollment, () -> {
+                throw new EnrollmentException("Erro: Curso '\" + courseTitle + \"' não encontrado.\");");
+            }
+        );
+        
+    }
 
     public void unsubscribe(Student student, String courseTitle) {
         Optional.of(student.getEnrollments().removeIf(e -> e.getCourse().getTitle().equalsIgnoreCase(courseTitle)))
