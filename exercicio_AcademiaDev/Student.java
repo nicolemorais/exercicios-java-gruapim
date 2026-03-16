@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import exercicio_AcademiaDev.exceptions.EnrollmentException;
-
 public class Student extends User {
     @CsvColumn(label = "Plano de Assinatura")
     private SubscriptionPlan subscriptionPlan;
@@ -51,10 +49,23 @@ public class Student extends User {
                 .findFirst();
     }
 
+    public int getCourseProgress(String courseTitle) {
+        return findEnrollmentByCourseTitle(courseTitle)
+                .map(Enrollment::getProgress)
+                .orElse(0);
+    }
+
+    public boolean isPremium() {
+        return this.subscriptionPlan == SubscriptionPlan.PREMIUM;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s | Plano: %s | Matrículas: %d",
-                super.toString(), subscriptionPlan, enrollments.size());
+        long ativos = enrollments.stream()
+                .filter(e -> e.getStatus() == EnrollmentStatus.ACTIVE)
+                .count();
+        return String.format("%s | Plano: %s | Ativas: %d | Total: %d",
+                super.toString(), subscriptionPlan, ativos, enrollments.size());
     }
 
 }

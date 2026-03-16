@@ -23,9 +23,9 @@ public class Course {
 
     public Course(String title, String description, String instructorName, int durationInHours, DifficultyLevel level) {
         this.title = Objects.requireNonNull(title, "Título é obrigatório");
-        this.description = Objects.requireNonNull(description, "Descrição é obrigatória");
+        this.description = description;
         this.instructorName = Objects.requireNonNull(instructorName, "Nome do instrutor é obrigatório");
-        this.level = Objects.requireNonNull(level, "Nível de dificuldade é obrigatório");
+        this.level = level;
         this.durationInHours = durationInHours;
         this.status = CourseStatus.ACTIVE;
     }

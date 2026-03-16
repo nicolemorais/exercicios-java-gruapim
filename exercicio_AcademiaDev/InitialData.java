@@ -19,16 +19,19 @@ public class InitialData {
         initialCourses.forEach(platform::addCourse);
 
         Student allan = new Student("Allan Silva", "allan@email.com", SubscriptionPlan.BASIC);
+        Student maria = new Student("Maria Lima", "maria@email.com", SubscriptionPlan.PREMIUM);
         Student carolina = new Student("Carolina Lima", "carolina@email.com", SubscriptionPlan.PREMIUM);
 
-        List.of(allan, carolina).forEach(student -> {
+        List.of(allan, maria, carolina).forEach(student -> {
             platform.registerUser(student);
         });
 
-        platform.openTicket(allan, "Dúvida Técnica", "Não entendi o conceito de Optional na aula 02.");
-        platform.openTicket(carolina, "Financeiro", "Meu plano Premium não ativou as aulas avançadas.");
-        platform.openTicket(allan, "Sugestão", "Poderiam adicionar um curso de Python?");
-
+        platform.openSupportTicket("carolina@email.com", "Dúvida Técnica", "Não entendi o conceito de Optional na aula 02.");
+        platform.openSupportTicket("maria@email.com", "Financeiro", "Meu plano Premium não ativou as aulas avançadas.");
+        platform.openSupportTicket("allan@email.com", "Sugestão", "Poderiam adicionar um curso de Python?");
+        
+        platform.openSupportTicket("sergio@academiadev.com", "Problemas de acesso", "Não estou conseguindo gerenciar os cursos.");
+        
         System.out.println("\n>>> Sistema populado com sucesso! <<<\n");
     }
 }

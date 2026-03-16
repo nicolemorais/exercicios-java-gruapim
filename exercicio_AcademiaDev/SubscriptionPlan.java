@@ -13,4 +13,13 @@ public enum SubscriptionPlan {
     public int getMaxCourses(){
         return maxCourses;
     }
+
+    public boolean isUnlimited() {
+        return maxCourses == Integer.MAX_VALUE;
+    }
+
+    @Override
+    public String toString() {
+        return this == BASIC ? "Plano Básico" : "Plano Premium";
+    }
 }
