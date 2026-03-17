@@ -1,6 +1,8 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.model;
 
 import java.util.Objects;
+
+import exercicio_AcademiaDev.util.CsvColumn;
 
 public abstract class User {
 

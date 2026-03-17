@@ -1,4 +1,4 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.model;
 
 public enum SubscriptionPlan {
     BASIC(3),

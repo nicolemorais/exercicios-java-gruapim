@@ -1,4 +1,4 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

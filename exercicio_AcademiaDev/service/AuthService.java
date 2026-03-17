@@ -1,6 +1,9 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.service;
 
 import java.util.Optional;
+
+import exercicio_AcademiaDev.model.Student;
+import exercicio_AcademiaDev.model.User;
 
 public class AuthService {
     private final AcademiaDevPlatform platform;
@@ -41,10 +44,6 @@ public class AuthService {
 
     public User getCurrentUser() {
         return currentUser;
-    }
-
-    public Student getCurrentStudent() {
-        return (Student) currentUser;
     }
 
 }

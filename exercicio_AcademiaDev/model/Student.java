@@ -1,15 +1,16 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import exercicio_AcademiaDev.util.CsvColumn;
 
 public class Student extends User {
     @CsvColumn(label = "Plano de Assinatura")
     private SubscriptionPlan subscriptionPlan;
 
-    private final List<Enrollment> enrollments;
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     public Student(String name, String email, SubscriptionPlan subscriptionPlan) {
         super(name, email);
@@ -40,7 +41,7 @@ public class Student extends User {
     }
 
     public List<Enrollment> getEnrollments() {
-        return Collections.unmodifiableList(enrollments);
+        return this.enrollments;
     }
 
     public Optional<Enrollment> findEnrollmentByCourseTitle(String title) {

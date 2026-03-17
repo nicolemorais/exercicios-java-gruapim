@@ -1,4 +1,4 @@
-package exercicio_AcademiaDev;
+package exercicio_AcademiaDev.service;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,6 +12,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import exercicio_AcademiaDev.exceptions.EnrollmentException;
+import exercicio_AcademiaDev.model.Course;
+import exercicio_AcademiaDev.model.CourseStatus;
+import exercicio_AcademiaDev.model.Enrollment;
+import exercicio_AcademiaDev.model.Student;
+import exercicio_AcademiaDev.model.SubscriptionPlan;
+import exercicio_AcademiaDev.model.SupportTicket;
+import exercicio_AcademiaDev.model.User;
 
 public class AcademiaDevPlatform {
 
@@ -22,13 +29,26 @@ public class AcademiaDevPlatform {
     // --- CADASTROS ---
 
     public void registerUser(User user) {
-        Optional.ofNullable(user)
-                .ifPresent(u -> users.add(u));
+        Optional.ofNullable(user).ifPresent(u -> {
+            users.add(u);
+
+            if (u instanceof Student s) {
+                System.out.printf("[USUÁRIO] %-20s | [TIPO  ] %-10s | [PLANO  ] %s%n",
+                        u.getName(), "ALUNO", s.getSubscriptionPlan());
+            } else {
+                System.out.printf("[USUÁRIO] %-20s | [TIPO  ] %-10s%n",
+                        u.getName(), "ADMINISTRADOR");
+            }
+        });
     }
 
     public void addCourse(Course course) {
         Optional.ofNullable(course)
-                .ifPresent(c -> courses.add(c));
+                .ifPresent(c -> {
+                    courses.add(c);
+                    System.out.printf("[CURSO  ] %-20s | [STATUS] %-10s | [CARGA  ] %dh%n",
+                            c.getTitle(), c.getStatus(), c.getDurationInHours());
+                });
     }
 
     // --- OPERAÇÕES DO ADMINISTRADOR ---
@@ -76,17 +96,16 @@ public class AcademiaDevPlatform {
 
     // --- OPERAÇÕES DO ALUNO ---
 
-    public void enrollStudent(String email, String courseTitle) {
-        Student student = findUserByEmail(email)
-                .filter(Student.class::isInstance)
-                .map(Student.class::cast)
-                .orElseThrow(() -> new EnrollmentException("Aluno não encontrado com o e-mail: " + email));
-
+    public void enrollStudent(Student student, String courseTitle) {
+        if (student.findEnrollmentByCourseTitle(courseTitle).isPresent()) {
+            throw new EnrollmentException("Você já está matriculado no curso: " + courseTitle);
+        }
+        
         findCourseByTitle(courseTitle)
                 .map(course -> {
                     if (course.getStatus() != CourseStatus.ACTIVE) {
                         throw new EnrollmentException(
-                                "Matrícula negada: O curso '" + course.getTitle() + "' está inativo.");
+                                "Matrícula negada: O curso '" + course.getTitle() + "' está desativado.");
                     }
                     if (!student.canEnroll()) {
                         throw new EnrollmentException("Matrícula negada: Limite de vagas do plano "
@@ -95,10 +114,12 @@ public class AcademiaDevPlatform {
                     return new Enrollment(student, course);
                 })
                 .ifPresentOrElse(
-                        student::addEnrollment, () -> {
-                            throw new EnrollmentException("Erro: Curso '" + courseTitle + "' não encontrado.");
+                        enrollment -> {
+                            student.addEnrollment(enrollment);
+                        },
+                        () -> {
+                            throw new EnrollmentException("Curso '" + courseTitle + "' não encontrado.");
                         });
-
     }
 
     public void checkEnrollments(String email) {
@@ -106,8 +127,6 @@ public class AcademiaDevPlatform {
                 .filter(Student.class::isInstance)
                 .map(Student.class::cast)
                 .ifPresentOrElse(student -> {
-                    System.out.println("\n=== MINHAS MATRÍCULAS (" + student.getName() + ") ===");
-
                     List<Enrollment> enrollments = student.getEnrollments();
 
                     if (enrollments.isEmpty()) {
@@ -125,26 +144,33 @@ public class AcademiaDevPlatform {
 
     public void updateProgress(String email, String courseTitle, int newProgress) {
         findUserByEmail(email)
-        .filter(Student.class::isInstance)
-        .map(Student.class::cast)
-        .ifPresentOrElse(student -> {
-            student.getEnrollments().stream()
-                .filter(e -> e.getCourse().getTitle().equalsIgnoreCase(courseTitle))
-                .findFirst()
-                .ifPresentOrElse(
-                    enrollment -> enrollment.updateProgress(newProgress),
-                    () -> System.out.println("Erro: Aluno não matriculado neste curso.")
-                );
-        }, () -> System.out.println("Erro: Aluno não encontrado."));
+                .filter(Student.class::isInstance)
+                .map(Student.class::cast)
+                .ifPresentOrElse(student -> {
+                    student.getEnrollments().stream()
+                            .filter(e -> e.getCourse().getTitle().equalsIgnoreCase(courseTitle))
+                            .findFirst()
+                            .ifPresentOrElse(
+                                    enrollment -> enrollment.updateProgress(newProgress),
+                                    () -> System.out.println("Erro: Aluno não matriculado neste curso."));
+                }, () -> System.out.println("Erro: Aluno não encontrado."));
     }
 
-    public void unsubscribe(Student student, String courseTitle) {
-        Optional.of(student.getEnrollments().removeIf(e -> e.getCourse().getTitle().equalsIgnoreCase(courseTitle)))
-                .filter(removed -> removed) // Só segue se for true
-                .ifPresentOrElse(
-                        r -> System.out.println(
-                                "Matrícula encerrada. Vaga liberada no plano " + student.getSubscriptionPlan()),
-                        () -> System.out.println("Erro: Você não possui matrícula ativa no curso: " + courseTitle));
+    public void unsubscribe(String email, String courseTitle) {
+        findUserByEmail(email)
+                .filter(Student.class::isInstance)
+                .map(Student.class::cast)
+                .ifPresentOrElse(student -> {
+                    boolean removed = student.getEnrollments()
+                            .removeIf(enrollment -> enrollment.getCourse().getTitle().equalsIgnoreCase(courseTitle));
+
+                    if (removed) {
+                        System.out.println(
+                                "Matrícula encerrada. Vaga liberada no plano " + student.getSubscriptionPlan());
+                    } else {
+                        System.out.println("Erro: Você não possui matrícula ativa no curso:" + courseTitle);
+                    }
+                }, () -> System.out.println("Erro: Aluno não encontrado."));
     }
 
     // --- BUSCAS ---
