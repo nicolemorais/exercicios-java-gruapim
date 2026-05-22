@@ -94,4 +94,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ValidationErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ValidationErrorResponse response = new ValidationErrorResponse(
+            java.time.LocalDateTime.now(),
+            HttpStatus.NOT_FOUND.value(),
+            "Recurso Não Encontrado",
+            ex.getMessage(),
+            new java.util.HashMap<>()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }
