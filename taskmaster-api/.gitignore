@@ -41,3 +41,7 @@ application-dev.properties
 ### Logs ###
 *.log
 logs/
+
+### Sistema Operacional ###
+.DS_Store
+Thumbs.db
