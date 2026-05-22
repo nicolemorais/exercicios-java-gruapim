@@ -10,16 +10,16 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String titulo;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", length = 250)
     private String descricao;
 
     @Column(nullable = false)
     private String categoria;
 
-    @Column(name = "data_limite", nullable = false)
+    @Column(name = "data_limite", nullable = false, columnDefinition = "DATE")
     private LocalDate dataLimite;
 
     public Task() {
