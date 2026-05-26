@@ -35,6 +35,7 @@ build/
 ### Credenciais e Configurações Sensíveis ###
 application-local.properties
 application-dev.properties
+application.properties
 *.env
 .env.*
 
